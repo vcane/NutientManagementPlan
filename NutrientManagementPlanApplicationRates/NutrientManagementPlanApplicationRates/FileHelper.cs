@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Nutrient_Management_Plan_Application_Rates
+namespace NutrientManagementPlanApplicationRates
 {
     public class FileHelper
     {

@@ -7,10 +7,45 @@ namespace NutrientManagementPlanApplicationRates
 {
     public class ApplicationFields
     {
-        private string fieldName;
-        private string location;
-        private float spreadableAcreage;
-        private string soilType;
+        public string FieldName
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public string Location
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public double SpreadableAcreage
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public string ApplicationRateLimitation
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public string NLeachingIndex
+        {
+            get => default;
+            set
+            {
+            }
+        }
 
         public void Display()
         {
