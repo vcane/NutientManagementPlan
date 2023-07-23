@@ -23,6 +23,7 @@ namespace NutrientManagementPlanApplicationRates
         private float _inorganicNitrogenAvailability;
         private string _nutrientConcentrationUnit;
         private float _organicNitrogenAvailability;
+        private float _plantAvailableN;
 
         public DateTime DateSampled
         {
@@ -32,7 +33,7 @@ namespace NutrientManagementPlanApplicationRates
             }
             set // need validation to ensure a date format was entered...
             {
-                Console.WriteLine(DateTime.Now - value);
+                //Console.WriteLine(DateTime.Now - value);
                 if ((DateTime.Now - value) < TimeSpan.FromDays(365)) //appears to work as of 7-10-23
                     _dateSampled = value;
                 else
@@ -62,6 +63,8 @@ namespace NutrientManagementPlanApplicationRates
             {
                 // need to include a conditional for winter vs. summer crop
                 // if winter multiply _organicNitrogen by 0.5
+                
+                
                 _organicNitrogen = value * _organicNitrogenAvailability;
             }
         }
@@ -91,17 +94,17 @@ namespace NutrientManagementPlanApplicationRates
             }
         }
 
-        public float WetPercentage
-        {
-            get
-            {
-                return _wetPercentage;
-            }
-            set
-            {
-                _wetPercentage = value;
-            }
-        }
+        //public float WetPercentage // may not be useful
+        //{
+        //    get
+        //    {
+        //        return _wetPercentage;
+        //    }
+        //    set
+        //    {
+        //        _wetPercentage = value;
+        //    }
+        //}
 
         public float Ph
         {
@@ -115,157 +118,93 @@ namespace NutrientManagementPlanApplicationRates
             }
         }
 
-        public string ManureType
-        {
-            get
-            {
-                return _manureType;
-            }
-            set //may need a loop to use continue keyword to handle user input error (something other than solid or liquid)...
-            {
-                if(value == "solid" || value == "liquid")
-                {
-                    _manureType = value;
-                    if (_manureType == "solid")
-                    {
-                        _nutrientConcentrationUnit = "lbs/ton";
-                    }
-                    else
-                    {
-                        _nutrientConcentrationUnit = "lbs/1000 gal";
-                    }
-                    
-                }
-                else
-                {
-                    Console.WriteLine("Please enter solid or liquid.");
-                }
-     
-            }
-        }
+        //public void DisplayManureNutrientsTable()
+        //{
+        //    Console.WriteLine();
+        //}
 
-        public string ManureAppMethod
-        {
-            get
-            {
-                return _manureAppMethod;
-            }
-            set
-            {
-                if (_manureType == "liquid")
-                {
-                    _organicNitrogenAvailability = 0.3f;
-                    Console.Write("Will the liquid be incorporated? ");
-                    var incorporated = Console.ReadLine().ToLower();
-                    if (incorporated == "no")
-                    {
-                        _manureAppMethod = "surface"; // conversion multiplier 0.5
-                        _inorganicNitrogenAvailability = 0.5f;
-                    }
-                    else
-                    {
-                        Console.Write("What type of incorporation will be utilized? Sweep or knife? ");
-                        var incorporationType = Console.ReadLine().ToLower();
-                        if (incorporationType == "sweep")
-                        {
-                            _manureAppMethod = "sweep"; // conversion multiplier 1.0
-                            _inorganicNitrogenAvailability = 1.0f;
-                        }
-                        else
-                        {
-                            _manureAppMethod = "knife"; // conversion multiplier 0.9
-                            _inorganicNitrogenAvailability = 0.9f;
-                        }
-                    }
-                }
-
-                else
-                {
-                    _organicNitrogenAvailability = 0.25f;
-                    Console.Write("Will the solid manure be incorporated into the soil? ");
-                    var incorporated = Console.ReadLine().ToLower();
-                    if (incorporated == "yes")
-                    {
-                        Console.Write("Within how many days will it be incorporated? Options are: less than 1, 1, 2, 3, 4, 5, 6, or 7. ");
-                        var days = Console.ReadLine().ToLower();
-
-                        switch (days)
-                        {
-                            case "less than 1":
-                                _inorganicNitrogenAvailability = 0.9f;
-                                break;
-
-                            case "1":
-                                _inorganicNitrogenAvailability = 0.65f;
-                                break;
-
-                            case "2":
-                                _inorganicNitrogenAvailability = 0.5f;
-                                break;
-
-                            case "3":
-                                _inorganicNitrogenAvailability = 0.4f;
-                                break;
-
-                            case "4":
-                                _inorganicNitrogenAvailability = 0.3f;
-                                break;
-
-                            case "5":
-                                _inorganicNitrogenAvailability = 0.2f;
-                                break;
-
-                            case "6":
-                                _inorganicNitrogenAvailability = 0.1f;
-                                break;
-
-                            default:
-                                _inorganicNitrogenAvailability = 0.05f;
-                                break;
-                        }
-                    }
-
-
-                }
-            }
-        }
-
-        private void concentrationConversion(string manureType, int ppm)
+        public void ManureTypeAndApplicationMethod(string manureType, string incorporated)
         {
             if (manureType == "solid")
             {
-                //
+                _nutrientConcentrationUnit = "lbs/ton";
+                _organicNitrogenAvailability = 0.25f;
+                //Console.Write("Will the solid manure be incorporated into the soil? ");
+                //var incorporated = Console.ReadLine().ToLower();
+                //if (incorporated == "yes")
+                //{
+                    Console.Write("Within how many days will it be incorporated? Options are: less than 1, 1, 2, 3, 4, 5, 6, or 7+. ");
+                    var days = Console.ReadLine().ToLower();
+
+                    switch (days)
+                    {
+                        case "less than 1":
+                            _inorganicNitrogenAvailability = 0.9f;
+                            break;
+
+                        case "1":
+                            _inorganicNitrogenAvailability = 0.65f;
+                            break;
+
+                        case "2":
+                            _inorganicNitrogenAvailability = 0.5f;
+                            break;
+
+                        case "3":
+                            _inorganicNitrogenAvailability = 0.4f;
+                            break;
+
+                        case "4":
+                            _inorganicNitrogenAvailability = 0.3f;
+                            break;
+
+                        case "5":
+                            _inorganicNitrogenAvailability = 0.2f;
+                            break;
+
+                        case "6":
+                            _inorganicNitrogenAvailability = 0.1f;
+                            break;
+
+                        default:
+                            _inorganicNitrogenAvailability = 0.05f;
+                            break;
+                    }
+                //}
             }
             else
             {
-                
+                _nutrientConcentrationUnit = "lbs/1000 gal";
+                _organicNitrogenAvailability = 0.3f;
+                //Console.Write("Will the liquid be incorporated? ");
+                //var incorporated = Console.ReadLine().ToLower();
+                if (incorporated == "no")
+                {
+                    _manureAppMethod = "surface"; // conversion multiplier 0.5
+                    _inorganicNitrogenAvailability = 0.5f;
+                }
+                else
+                {
+                    Console.Write("What type of incorporation will be utilized? Sweep or knife? ");
+                    var incorporationType = Console.ReadLine().ToLower();
+                    if (incorporationType == "sweep")
+                    {
+                        _manureAppMethod = "sweep"; // conversion multiplier 1.0
+                        _inorganicNitrogenAvailability = 1.0f;
+                    }
+                    else
+                    {
+                        _manureAppMethod = "knife"; // conversion multiplier 0.9
+                        _inorganicNitrogenAvailability = 0.9f;
+                    }
+                }
             }
         }
-        
-        
-        //public float CalcAvailOrgN()
-        //{
-        //    throw new System.NotImplementedException();
-        //}
 
-        //public float CalcAvailAmmonium()
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-
-        //public float CalcAvailPhos()
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-
-        //public float CalcTotalAvailN()
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-
-        public void DisplayManureNutrientsTable()
+        public float CalculatePAN(float ammonium, float orgN)
         {
-            Console.WriteLine();
-        }
+            _plantAvailableN = ammonium + orgN;
+            return _plantAvailableN;
+        }        
     }
 }
