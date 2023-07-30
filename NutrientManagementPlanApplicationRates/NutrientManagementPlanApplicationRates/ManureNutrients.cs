@@ -11,6 +11,7 @@ namespace NutrientManagementPlanApplicationRates
 {
     public class ManureNutrients
     {
+        
         private float _ammoniumNitrogen;
         private DateTime _dateSampled;
         private string _manureAppMethod;
@@ -24,6 +25,7 @@ namespace NutrientManagementPlanApplicationRates
         private string _nutrientConcentrationUnit;
         private float _organicNitrogenAvailability;
         private float _plantAvailableN;
+        
 
         public DateTime DateSampled
         {
@@ -87,10 +89,17 @@ namespace NutrientManagementPlanApplicationRates
             {
                 return _phosphorus;
             }
-            set // need to add calculation for when soil phosphorus level is less than 20 ppm
-                // multiply _phosphorus by 0.5 if condition above is met
+            set 
             {
-                _phosphorus = value;
+                //var soilNutrients = new SoilNutrients(); //creates new instance so soilNutrients.Phosphorus == 0 at this point. Therefore, it will always run the first part of the conditional and multiply value * 0.5
+                if (SoilNutrients.Phosphorus <= 20)
+                {
+                    _phosphorus = value * 0.5f;
+                }
+                else
+                {
+                    _phosphorus = value;
+                }   
             }
         }
 

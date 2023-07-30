@@ -1,89 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace NutrientManagementPlanApplicationRates
 {
     public class SoilNutrients
     {
-        private DateTime _dateSampled;
+        //private DateTime _dateSampled;
         private float _pH;
         private string _fieldName;
-        private float _soilOrganicMatter;
-        private int _phosphorus;
+        private float _mineralizedOM;
+        private static int _phosphorus; // had to use static member variable and property to have the ability to use the _phosphorus variable for calculating the available phosphorus in the manure in the ManureNutrients class
         private float _nitrate;
         private int _potassium;
+        private int _coolSeasonConversion = 10;
+        private int _warmSeasonConversion = 20;
+        private string _soilTestMethod;
 
-        public DateTime DateSampled
-        {
-            get => default;
-            set
-            {
-            }
-        }
+        //public DateTime DateSampled // use inheritance or composition here....
+        //{
+        //    get => default;
+        //    set
+        //    {
+        //    }
+        //}
 
         public string FieldName
         {
-            get => default;
+            get { return _fieldName; }
             set
             {
+                if (value != null) { _fieldName = value; } //need better validation
+                else { Console.WriteLine("Please enter a field name."); }                
             }
         }
 
-        public float Nitrate
-        {
-            get => default;
-            set
-            {
-            }
-        }
+        //public float Nitrate // may not be useful
+        //{
+        //    get => default;
+        //    set
+        //    {
+        //    }
+        //}
 
         public float Ph
         {
-            get => default;
-            set
-            {
-            }
+            get { return _pH; }
+            set { _pH = value; }
         }
 
-        public int Phosphorus
+        public static int Phosphorus 
         {
-            get => default;
-            set
-            {
-            }
+            get { return _phosphorus; }
+            set { _phosphorus = value; }
         }
 
         public int Potassium
         {
-            get => default;
-            set
-            {
-            }
+            get { return _potassium; }
+            set { _potassium = value;}
         }
 
-        public float SoilOrganicMatter
-        {
-            get => default;
-            set
-            {
-            }
-        }
+        //public float SoilOrganicMatter
+        //{
+        //    get => default;
+        //    set
+        //    {
+        //        if ( == "cool") { }
+        //    }
+        //}
 
-        public string SoilType
-        {
-            get => default;
-            set
-            {
-            }
-        }
+        //public string SoilType
+        //{
+        //    get => default;
+        //    set
+        //    {
+        //    }
+        //}
 
         public string SoilTestMethod
         {
-            get => default;
+            get { return _soilTestMethod; }
             set
             {
+                if (value != null && value == "mehlich-iii")
+                {
+                    _soilTestMethod = "Mehlich-III";
+                }
+                else if (value != null && value == "bray-1")
+                {
+                    _soilTestMethod = "Bray-1";
+                }
+                else
+                {
+                    _soilTestMethod = "Olsen";
+                }
             }
         }
 
@@ -92,14 +106,23 @@ namespace NutrientManagementPlanApplicationRates
             throw new System.NotImplementedException();
         }
 
-        public float CalculateNitrate()
+        public float CalculateNitrate(float nitratePpm, float depth)
         {
-            throw new System.NotImplementedException();
+            _nitrate = nitratePpm * depth * 0.3f;
+            return _nitrate;
         }
 
-        public float CalculateSomMineralization()
+        public float CalculateSomMineralization(string cropSeason, float soilOrganicMatter)
         {
-            throw new System.NotImplementedException();
+            if(cropSeason == "cool")
+            {
+                _mineralizedOM = soilOrganicMatter * _coolSeasonConversion;
+            }
+            else
+            {
+                _mineralizedOM = soilOrganicMatter * _warmSeasonConversion;
+            }
+            return _mineralizedOM;
         }
     }
 }
